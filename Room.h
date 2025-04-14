@@ -1,5 +1,6 @@
 #ifndef ROOM_H
 #define ROOM_H
+#include "Student.h"
 class Room {
 private:
     int number;
