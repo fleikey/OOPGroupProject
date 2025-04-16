@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip>
 #include "Person.h"
 #include "Student.h"
 #include "Room.h"
@@ -10,7 +11,7 @@
 
 using namespace std;
 
-DisplayMenu() {
+void displayMenu() {
     cout << "\n===== DORMITORY MANAGEMENT SYSTEM ====="<<endl;
     cout << "1. Add Student"<<endl;
     cout << "2. Add Room"<<endl;
@@ -26,42 +27,43 @@ DisplayMenu() {
 }
 
 void displayDormitoryStatus(const vector<Room>& rooms, const string& dormName) {
-    cout << "\n===== " << dormName << " DORMITORY STATUS =====\n";
-    cout << "Total Rooms: " << rooms.size() << "\n";
+    cout << "\n===== " << dormName << " DORMITORY STATUS ====="<<endl;
+    cout << "Total Rooms: " << rooms.size() << endl;
     
     int availableRooms = 0;
     for (const auto& room : rooms) {
         if (room.isAvailable()) availableRooms++;
     }
     
-    cout << "Available Rooms: " << availableRooms << "\n";
-    cout << "Occupied Rooms: " << (rooms.size() - availableRooms) << "\n";
+    cout << "Available Rooms: " << availableRooms << endl;
+    cout << "Occupied Rooms: " << (rooms.size() - availableRooms) << endl;
     
-    cout << "\nRoom Status:\n";
-    cout << left << setw(10) << "Room #" << setw(15) << "Status" << "\n";
-    cout << "-------------------------\n";
+    cout << "\nRoom Status:"<<endl;
+    cout << left << setw(10) << "Room #" << setw(15) << "Status" << endl;
+    cout << "-------------------------"<<endl;
     
     for (const auto& room : rooms) {
+
         cout << left << setw(10) << room.getNumber() 
-             << setw(15) << (room.isAvailable() ? "Available" : "Occupied") << "\n";
+             << setw(15) << (room.isAvailable() ? "Available" : "Occupied") << endl;
     }
-    cout << "===============================\n\n";
+    cout << "==============================="<<endl<<endl;
 }
 
 int main() {
-    Admin admin("John Doe", "Dormitory Manager");
-    Dormitory mainDormitory("Main Building");
+    Admin admin("Fotima opa", "Komendant");
+    Dormitory dorm("UWED dorm");
     vector<Payment> payments;
     vector<Student*> students; 
 
         for (int i = 101; i <= 110; i++) {
-        mainDormitory.addRoom(Room(i));
+        dorm.addRoom(Room(i));
     }
     
     int choice;
     bool running = true;
     
-    cout << "Welcome to the Dormitory Management System\n";
+    cout << "Welcome to the Dormitory Management System"<<endl;
     
     while (running) {
         displayMenu();
@@ -91,12 +93,12 @@ int main() {
                     Student* newStudent = new Student(name, id);
                     students.push_back(newStudent);
                     
-                    Payment newPayment(to_string(id), 640000.0);
+                    Payment newPayment(to_string(id), 640000);
                     payments.push_back(newPayment);
                     
-                    cout << "Student added successfully!\n";
+                    cout << "Student added successfully!"<<endl;
                 } else {
-                    cout << "A student with this name already exists.\n";
+                    cout << "A student with this name already exists."<<endl;
                 }
                 break;
             }
@@ -106,8 +108,8 @@ int main() {
                 cout << "Enter room number: ";
                 cin >> roomNumber;
                 
-                mainDormitory.addRoom(Room(roomNumber));
-                cout << "Room added successfully!\n";
+                dorm.addRoom(Room(roomNumber));
+                cout << "Room added successfully!"<<endl;
                 break;
             }
             
@@ -131,7 +133,7 @@ int main() {
                 }
                 
                 Room* foundRoom = nullptr;
-                vector<Room>& rooms = mainDormitory.getRooms();
+                vector<Room>& rooms = dorm.getRooms();
                 for (auto& room : rooms) {
                     if (room.getNumber() == roomNum) {
                         foundRoom = &room;
@@ -142,8 +144,8 @@ int main() {
                 if (foundStudent && foundRoom) {
                     admin.assignRoom(*foundStudent, *foundRoom);
                 } else {
-                    if (!foundStudent) cout << "Student not found.\n";
-                    if (!foundRoom) cout << "Room not found.\n";
+                    if (!foundStudent) cout << "Student not found."<<endl;
+                    if (!foundRoom) cout << "Room not found."<<endl;
                 }
                 
                 break;
@@ -172,7 +174,7 @@ int main() {
                         if (payment.getStudentID() == to_string(studentId)) {
                             payment.makePayment(amount);
                             cout << "Payment of " << amount << "UZS recorded.\n";
-                            cout << "Remaining balance: " << payment.getBalance() << " UZS\n";
+                            cout << "Remaining debt: " << payment.getBalance() << " UZS\n";
                             
                             if (payment.getBalance() == 0) {
                                 for (auto& student : students) {
@@ -186,7 +188,7 @@ int main() {
                         }
                     }
                 } else {
-                    cout << "Student not found.\n";
+                    cout << "Student not found."<<endl;
                 }
                 break;
             }
@@ -212,13 +214,13 @@ int main() {
                         }
                     }
                 } else {
-                    cout << "Student not found.\n";
+                    cout << "Student not found."<<endl;
                 }
                 break;
             }
             
             case 6: {  //sends reminders to students
-                cout << "Sending payment reminders to students with outstanding balances...\n";
+                cout << "Sending payment reminders to students with deby"<<endl;
                 
                 for (auto& student : students) {
                     int studentId = student->getID();
@@ -233,44 +235,44 @@ int main() {
             }
             
             case 7: {  //displays rooms
-                vector<Room>& rooms = mainDormitory.getRooms();
-                displayDormitoryStatus(rooms, "Main Building");
+                vector<Room>& rooms = dorm.getRooms();
+                displayDormitoryStatus(rooms, "UWED dorm");
                 break;
             }
             
             case 8: {  //displays all the students
-                cout << "\n===== STUDENT DIRECTORY =====\n";
+                cout << "\n===== STUDENT DIRECTORY ====="<<endl;
                 if (students.empty()) {
-                    cout << "No students registered yet.\n";
+                    cout << "No students registered yet."<<endl;
                 } else {
                     for (auto& student : students) {
                         student->show();
                     }
                 }
-                cout << "===========================\n\n";
+                cout << "==========================="<<endl<<endl;
                 break;
             }
             
             case 9: { //displays payment records
-                cout << "\n===== PAYMENT RECORDS =====\n";
-                cout << left << setw(15) << "Student ID" << setw(15) << "Balance" << "\n";
-                cout << "------------------------------\n";
+                cout << "\n===== PAYMENT RECORDS ====="<<endl;
+                cout << left << setw(15) << "Student ID" << setw(15) << "Debt" << endl;
+                cout << "------------------------------"<<endl;
                 
                 for (const auto& payment : payments) {
                     cout << left << setw(15) << payment.getStudentID()
-                         << setw(15) << "$" << fixed << setprecision(2) << payment.getBalance() << "\n";
+                         << setw(15) << "UZS" << fixed << setprecision(2) << payment.getBalance() << endl;
                 }
-                cout << "==============================\n\n";
+                cout << "=============================="<<endl;
                 break;
             }
             
             case 0:
-                cout << "Thank you for using the Dormitory Management System!\n";
+                cout << "Thank you for using our Dormitory Management System!"<<endl;
                 running = false;
                 break;
                 
             default:
-                cout << "Invalid choice. Please try again.\n";
+                cout << "Invalid choice. Please try again."<<endl;
                 break;
         }
     }
