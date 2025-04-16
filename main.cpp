@@ -1,9 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
 #include "Person.h"
 #include "Student.h"
 #include "Room.h"
@@ -13,41 +10,21 @@
 
 using namespace std;
 
-// Date utility for payment deadline tracking
-class DateUtility {
-public:
-    static string getCurrentDate() {
-        auto now = chrono::system_clock::now();
-        time_t tt = chrono::system_clock::to_time_t(now);
-        tm local_tm = *localtime(&tt);
-        
-        stringstream ss;
-        ss << put_time(&local_tm, "%Y-%m-%d");
-        return ss.str();
-    }
-    
-    static bool isPaymentOverdue(const string& deadline) {
-        return !deadline.empty();
-    }
-};
-
-// Function to display the main menu
-void displayMenu() {
-    cout << "\n===== DORMITORY MANAGEMENT SYSTEM =====\n";
-    cout << "1. Add Student\n";
-    cout << "2. Add Room\n";
-    cout << "3. Assign Student to Room\n";
-    cout << "4. Make Payment\n";
-    cout << "5. Check Payment Status\n";
-    cout << "6. Send Payment Reminders\n";
-    cout << "7. Display Dormitory Status\n";
-    cout << "8. Display All Students\n";
-    cout << "9. Display Payment Records\n";
-    cout << "0. Exit\n";
+DisplayMenu() {
+    cout << "\n===== DORMITORY MANAGEMENT SYSTEM ====="<<endl;
+    cout << "1. Add Student"<<endl;
+    cout << "2. Add Room"<<endl;
+    cout << "3. Assign Student to Room"<<endl;
+    cout << "4. Make Payment"<<endl;
+    cout << "5. Check Payment Status"<<endl;
+    cout << "6. Send Payment Reminders"<<endl;
+    cout << "7. Display Dormitory Status"<<endl;
+    cout << "8. Display All Students"<<endl;
+    cout << "9. Display Payment Records"<<endl;
+    cout << "0. Exit"<<endl;
     cout << "Choice: ";
 }
 
-// Function to display dormitory status
 void displayDormitoryStatus(const vector<Room>& rooms, const string& dormName) {
     cout << "\n===== " << dormName << " DORMITORY STATUS =====\n";
     cout << "Total Rooms: " << rooms.size() << "\n";
@@ -72,14 +49,12 @@ void displayDormitoryStatus(const vector<Room>& rooms, const string& dormName) {
 }
 
 int main() {
-    // Initialize system components
     Admin admin("John Doe", "Dormitory Manager");
     Dormitory mainDormitory("Main Building");
     vector<Payment> payments;
-    vector<Student*> students; // Use pointers to avoid copy constructor issues
-    
-    // Add some initial rooms
-    for (int i = 101; i <= 110; i++) {
+    vector<Student*> students; 
+
+        for (int i = 101; i <= 110; i++) {
         mainDormitory.addRoom(Room(i));
     }
     
@@ -93,7 +68,7 @@ int main() {
         cin >> choice;
         
         switch (choice) {
-            case 1: {  // Add Student
+            case 1: {  //student
                 string name;
                 int id;
                 
@@ -104,7 +79,6 @@ int main() {
                 cout << "Enter student ID: ";
                 cin >> id;
                 
-                // Check if student ID already exists
                 bool exists = false;
                 for (const auto& student : students) {
                     if (student->getName() == name) {
@@ -117,8 +91,7 @@ int main() {
                     Student* newStudent = new Student(name, id);
                     students.push_back(newStudent);
                     
-                    // Create payment record
-                    Payment newPayment(to_string(id), 500.0); // $500 as default fee
+                    Payment newPayment(to_string(id), 640000.0);
                     payments.push_back(newPayment);
                     
                     cout << "Student added successfully!\n";
@@ -128,7 +101,7 @@ int main() {
                 break;
             }
             
-            case 2: {  // Add Room
+            case 2: {  //room
                 int roomNumber;
                 cout << "Enter room number: ";
                 cin >> roomNumber;
@@ -138,7 +111,7 @@ int main() {
                 break;
             }
             
-            case 3: {  // Assign Student to Room
+            case 3: {  //assigns a student to room
                 string name;
                 int roomNum;
                 
@@ -149,7 +122,6 @@ int main() {
                 cout << "Enter room number: ";
                 cin >> roomNum;
                 
-                // Find student
                 Student* foundStudent = nullptr;
                 for (auto& student : students) {
                     if (student->getName() == name) {
@@ -158,9 +130,8 @@ int main() {
                     }
                 }
                 
-                // Find room
                 Room* foundRoom = nullptr;
-                vector<Room>& rooms = mainDormitory.getRooms(); // You'll need to add this accessor
+                vector<Room>& rooms = mainDormitory.getRooms();
                 for (auto& room : rooms) {
                     if (room.getNumber() == roomNum) {
                         foundRoom = &room;
@@ -178,7 +149,7 @@ int main() {
                 break;
             }
             
-            case 4: {  // Make Payment
+            case 4: {  //makes payment
                 string name;
                 double amount;
                 
@@ -188,25 +159,21 @@ int main() {
                 
                 cout << "Enter payment amount is UZS: ";
                 cin >> amount;
-                
-                // Find student ID
                 int studentId = -1;
                 for (auto& student : students) {
                     if (student->getName() == name) {
-                        studentId = student->getID(); // Using room number as ID for simplicity
+                        studentId = student->getID();
                         break;
                     }
                 }
                 
                 if (studentId != -1) {
-                    // Find payment record
                     for (auto& payment : payments) {
                         if (payment.getStudentID() == to_string(studentId)) {
                             payment.makePayment(amount);
                             cout << "Payment of " << amount << "UZS recorded.\n";
                             cout << "Remaining balance: " << payment.getBalance() << " UZS\n";
                             
-                            // Update student payment status if paid in full
                             if (payment.getBalance() == 0) {
                                 for (auto& student : students) {
                                     if (student->getName() == name) {
@@ -224,23 +191,20 @@ int main() {
                 break;
             }
             
-            case 5: {  // Check Payment Status
+            case 5: {  //payment status
                 string name;
                 cout << "Enter student name: ";
                 cin.ignore();
                 getline(cin, name);
-                
-                // Find student ID
                 int studentId = -1;
                 for (auto& student : students) {
                     if (student->getName() == name) {
-                        studentId = student->getID(); // Using room number as ID for simplicity
+                        studentId = student->getID();
                         break;
                     }
                 }
                 
                 if (studentId != -1) {
-                    // Find payment record
                     for (auto& payment : payments) {
                         if (payment.getStudentID() == to_string(studentId)) {
                             admin.checkPayments(payment);
@@ -253,13 +217,11 @@ int main() {
                 break;
             }
             
-            case 6: {  // Send Payment Reminders
+            case 6: {  //sends reminders to students
                 cout << "Sending payment reminders to students with outstanding balances...\n";
                 
                 for (auto& student : students) {
                     int studentId = student->getID();
-                    
-                    // Find payment record
                     for (auto& payment : payments) {
                         if (payment.getStudentID() == to_string(studentId) && payment.getBalance() > 0) {
                             admin.sendPaymentReminder(*student);
@@ -270,13 +232,13 @@ int main() {
                 break;
             }
             
-            case 7: {  // Display Dormitory Status
-                vector<Room>& rooms = mainDormitory.getRooms(); // You'll need to add this accessor
+            case 7: {  //displays rooms
+                vector<Room>& rooms = mainDormitory.getRooms();
                 displayDormitoryStatus(rooms, "Main Building");
                 break;
             }
             
-            case 8: {  // Display All Students
+            case 8: {  //displays all the students
                 cout << "\n===== STUDENT DIRECTORY =====\n";
                 if (students.empty()) {
                     cout << "No students registered yet.\n";
@@ -289,7 +251,7 @@ int main() {
                 break;
             }
             
-            case 9: {  // Display Payment Records
+            case 9: { //displays payment records
                 cout << "\n===== PAYMENT RECORDS =====\n";
                 cout << left << setw(15) << "Student ID" << setw(15) << "Balance" << "\n";
                 cout << "------------------------------\n";
@@ -302,7 +264,7 @@ int main() {
                 break;
             }
             
-            case 0:  // Exit
+            case 0:
                 cout << "Thank you for using the Dormitory Management System!\n";
                 running = false;
                 break;
@@ -313,7 +275,6 @@ int main() {
         }
     }
     
-    // Clean up dynamically allocated memory
     for (auto& student : students) {
         delete student;
     }
