@@ -193,7 +193,7 @@ int main() {
                 int studentId = -1;
                 for (auto& student : students) {
                     if (student->getName() == name) {
-                        studentId = student->getRoomNumber(); // Using room number as ID for simplicity
+                        studentId = student->getID(); // Using room number as ID for simplicity
                         break;
                     }
                 }
@@ -234,7 +234,7 @@ int main() {
                 int studentId = -1;
                 for (auto& student : students) {
                     if (student->getName() == name) {
-                        studentId = student->getRoomNumber(); // Using room number as ID for simplicity
+                        studentId = student->getID(); // Using room number as ID for simplicity
                         break;
                     }
                 }
@@ -257,7 +257,7 @@ int main() {
                 cout << "Sending payment reminders to students with outstanding balances...\n";
                 
                 for (auto& student : students) {
-                    int studentId = student->getRoomNumber();
+                    int studentId = student->getID();
                     
                     // Find payment record
                     for (auto& payment : payments) {
