@@ -7,9 +7,12 @@
 class Dormitory {
 private:
     std::vector<Room> rooms;
+    string name;
 public:
+    Dormitory(string name);
     void addRoom(const Room& room);
     Room* findAvailableRoom();
     void assignStudentToRoom(Student& student);
+    vector<Room>& getRooms() { return rooms; }
 };
 #endif

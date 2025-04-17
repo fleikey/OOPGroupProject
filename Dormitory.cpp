@@ -1,5 +1,8 @@
 #include "Dormitory.h"
 
+
+Dormitory::Dormitory(string name): name(name){}
+
 void Dormitory::addRoom(const Room& room) {
     rooms.push_back(room);
 }
