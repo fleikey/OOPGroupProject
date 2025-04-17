@@ -3,6 +3,7 @@
 #include "PaymentTracker.h"
 #include "Student.h"
 #include <string>
+#include "Room.h"
 using namespace std;
 
 class Admin {

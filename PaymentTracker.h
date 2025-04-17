@@ -11,7 +11,7 @@ class Payment {
     double amountPaid;
 
 public:
-    Payment(const std::string& studentID, double amountDue);
+    Payment(const string& studentID, double amountDue);
 
     void makePayment(double amount);
     double getBalance() const;
