@@ -1,7 +1,6 @@
 
 
 #include "Admin.h"
-#include "PaymentTracker.h"
 #include <iostream>
 using namespace std;
 
@@ -20,10 +19,12 @@ void Admin::assignRoom(Student& student, Room& room) {
 
 void Admin::checkPayments(const Payment& payment) {
     cout << "Checking payments for student: " << payment.getStudentID() << "\n";
-    cout << "Outstanding balance: $" << payment.getBalance() << "\n";
+    cout << "Outstanding balance: " << payment.getBalance() << " UZS\n";
 }
 
 void Admin::sendPaymentReminder(const Student& student) {
-    cout << "Reminder sent to student: " << student.getName() << "\n";
+    if (!student.checkPaymentStatus()) {
+        cout << "Reminder: Student " << student.getName() << " has an outstanding payment.\n";
+    }
 }
 
