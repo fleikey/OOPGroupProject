@@ -3,6 +3,7 @@
 
 #include "Person.h"
 
+
 class Student : public Person
 {
 private:
@@ -15,6 +16,7 @@ public:
 
     void setRoomNumber(int number);
     int getRoomNumber() const;
+    int getID() const { return id; } 
 
     void payFees();
     bool checkPaymentStatus() const;
